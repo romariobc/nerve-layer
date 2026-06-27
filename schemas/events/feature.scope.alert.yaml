@@ -1,0 +1,25 @@
+﻿type: object
+required: [project_slug, alert_type, detected_at, trigger_text, matched_rule]
+properties:
+  project_slug:
+    type: string
+  alert_type:
+    type: string
+    enum: [out_of_scope, scope_drift, adr_conflict]
+  detected_at:
+    type: string
+    format: date-time
+  trigger_text:
+    type: string
+  matched_rule:
+    type: object
+    required: [layer, rule]
+    properties:
+      layer:
+        type: string
+        enum: [computational, inferential]
+      rule:
+        type: string
+  suggested_adr:
+    type: string
+additionalProperties: false

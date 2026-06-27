@@ -1,0 +1,59 @@
+# skill.updated — payload schema
+# Emitido por: project-studio
+# Quando: SKILL.md de um domínio é atualizado (vocabulário, regras, entidades)
+# Subscribers: agent-dev-harness
+
+type: object
+required:
+  - skill_id
+  - project_slug
+  - domain
+  - skill_version
+  - updated_at
+properties:
+  skill_id:
+    type: string
+    description: Identificador do skill (ex: "agendamento").
+
+  project_slug:
+    type: string
+
+  domain:
+    type: string
+
+  skill_version:
+    type: string
+    pattern: "^\\d+\\.\\d+\\.\\d+$"
+    description: Nova versão do skill após a atualização.
+
+  updated_at:
+    type: string
+    format: date-time
+
+  changed_terms:
+    type: array
+    items:
+      type: object
+      required: [old, new, since]
+      properties:
+        old:
+          type: string
+        new:
+          type: string
+        since:
+          type: string
+          pattern: "^\\d+\\.\\d+\\.\\d+$"
+        migration_note:
+          type: string
+    description: >
+      OPTIONAL. Termos renomeados ou descontinuados nesta versão.
+      O Harness usa esta lista para alertar sobre código que usa termos antigos.
+
+  full_reload_required:
+    type: boolean
+    default: false
+    description: >
+      OPTIONAL. true se entidades ou regras críticas mudaram —
+      Harness deve recarregar o skill completo.
+
+additionalProperties: false

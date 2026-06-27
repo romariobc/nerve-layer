@@ -1,0 +1,24 @@
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "name": "brief.published",
+  "source": "project-studio",
+  "timestamp": "2026-06-25T10:00:00Z",
+  "payload": {
+    "brief_version": "1.2.0",
+    "brief_hash": "sha256:a3f4b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3",
+    "project_slug": "petshop-patinhas-bot",
+    "changed_sections": ["BUSINESS.md", "decisions/ADR-003.md"],
+    "full_reload_required": false,
+    "publisher": "@romariobc"
+  },
+  "routing": {
+    "subscribers": ["agent-dev-harness", "context-adapter"],
+    "requires_human": false,
+    "priority": "high"
+  },
+  "meta": {
+    "schema_version": "1.0.0",
+    "retry_count": 0,
+    "correlation_id": "660e8400-e29b-41d4-a716-446655440001"
+  }
+}

@@ -1,0 +1,23 @@
+type: object
+required: [brief_version, brief_hash, project_slug, changed_sections, full_reload_required]
+properties:
+  brief_version:
+    type: string
+    pattern: "^\\d+\\.\\d+\\.\\d+$"
+  brief_hash:
+    type: string
+    pattern: "^sha256:[a-f0-9]{64}$"
+  project_slug:
+    type: string
+  changed_sections:
+    type: array
+    items:
+      type: string
+    description: Arquivos que mudaram — permite carregamento seletivo pelo Harness.
+  full_reload_required:
+    type: boolean
+    description: true se AGENTS.md ou GUARDRAILS.md mudaram.
+  publisher:
+    type: string
+    description: OPTIONAL. Handle do Tech Lead que publicou.
+additionalProperties: false

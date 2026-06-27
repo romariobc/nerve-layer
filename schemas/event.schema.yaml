@@ -1,0 +1,98 @@
+# ================================================================
+# event.schema.yaml — Nerve Layer · Base Event Contract v1.0.0
+# ================================================================
+# Para adicionar novo evento:
+#   1. Adicionar nome em Event.name.enum
+#   2. Criar schemas/events/<event-name>.yaml com payload tipado
+#   3. Adicionar rota em routing-table.yaml
+#   4. Incrementar schema_version (MINOR se payload novo, PATCH se ajuste)
+# ================================================================
+
+$schema: "https://json-schema.org/draft/2020-12"
+$id: "nerve-layer/schemas/event.schema.yaml"
+title: NerveEvent
+type: object
+required: [id, name, source, timestamp, payload, routing, meta]
+
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Idempotency key — UUID v4 gerado pelo emissor.
+
+  name:
+    type: string
+    enum:
+      - brief.published
+      - adr.approved
+      - adr.superseded
+      - adr.stale
+      - design.component.changed
+      - design.token.updated
+      - harness.task.complete
+      - harness.task.blocked
+      - feature.scope.alert
+      - skill.updated
+      - adapter.fidelity.report
+      - query.request
+      - query.result
+
+  source:
+    type: string
+    enum:
+      - project-studio
+      - agent-dev-harness
+      - context-adapter
+      - nerve-layer
+      - figma
+      - linear
+      - github
+      - slack
+      - notion
+
+  timestamp:
+    type: string
+    format: date-time
+
+  payload:
+    type: object
+    description: Validado contra schemas/events/<event.name>.yaml pelo validator.
+
+  routing:
+    type: object
+    required: [subscribers, requires_human, priority]
+    properties:
+      subscribers:
+        type: array
+        items:
+          type: string
+          enum: [project-studio, agent-dev-harness, context-adapter, nerve-layer]
+        minItems: 1
+      requires_human:
+        type: boolean
+        description: true → Studio apresenta ao PM/Tech Lead antes de agir.
+      priority:
+        type: string
+        enum: [low, normal, high]
+
+  meta:
+    type: object
+    required: [schema_version, retry_count]
+    properties:
+      schema_version:
+        type: string
+        pattern: "^\\d+\\.\\d+\\.\\d+$"
+      retry_count:
+        type: integer
+        minimum: 0
+        default: 0
+      correlation_id:
+        type: string
+        format: uuid
+        description: OPTIONAL. Agrupa eventos de uma mesma operação lógica.
+      causation_id:
+        type: string
+        format: uuid
+        description: OPTIONAL. ID do evento que causou este.
+
+additionalProperties: false

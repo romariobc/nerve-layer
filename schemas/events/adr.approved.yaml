@@ -1,0 +1,25 @@
+type: object
+required: [adr_id, adr_title, project_slug, approved_by, approved_at, supersedes]
+properties:
+  adr_id:
+    type: string
+    pattern: "^ADR-\\d{3}$"
+  adr_title:
+    type: string
+  project_slug:
+    type: string
+  approved_by:
+    type: string
+  approved_at:
+    type: string
+    format: date-time
+  supersedes:
+    type: array
+    items:
+      type: string
+      pattern: "^ADR-\\d{3}$"
+    description: ADRs que esta decisão substitui. Array vazio se nenhum.
+  constraint_summary:
+    type: string
+    description: OPTIONAL. Resumo em uma frase da restrição imposta ao Harness.
+additionalProperties: false

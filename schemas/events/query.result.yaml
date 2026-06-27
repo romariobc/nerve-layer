@@ -1,0 +1,47 @@
+# query.result — payload schema
+# Emitido por: nerve-layer
+# Quando: query.request foi executada (com sucesso ou falha)
+# Subscribers: project-studio
+
+type: object
+required:
+  - query_id
+  - mcp_target
+  - success
+  - executed_at
+properties:
+  query_id:
+    type: string
+    format: uuid
+    description: Referencia o query.request original.
+
+  mcp_target:
+    type: string
+    enum: [linear, github, figma, slack, notion]
+
+  success:
+    type: boolean
+
+  executed_at:
+    type: string
+    format: date-time
+
+  data:
+    type: object
+    description: >
+      OPTIONAL (presente se success=true).
+      Dados retornados pelo sistema externo.
+      Formato específico por mcp_target.
+
+  error:
+    type: object
+    description: OPTIONAL (presente se success=false).
+    properties:
+      code:
+        type: string
+        enum: [timeout, mcp_unavailable, auth_error, not_found, unknown]
+      message:
+        type: string
+    required: [code, message]
+
+additionalProperties: false

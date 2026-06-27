@@ -1,0 +1,22 @@
+type: object
+required: [adr_id, project_slug, owner, created_at, hours_stale]
+properties:
+  adr_id:
+    type: string
+    pattern: "^ADR-\\d{3}$"
+  project_slug:
+    type: string
+  owner:
+    type: string
+    description: Handle do responsável pela aprovação (ex "@romariobc").
+  created_at:
+    type: string
+    format: date-time
+  hours_stale:
+    type: integer
+    minimum: 72
+  review_deadline:
+    type: string
+    format: date-time
+    description: OPTIONAL. Deadline original definido no ADR.
+additionalProperties: false

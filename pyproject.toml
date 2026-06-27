@@ -1,0 +1,19 @@
+﻿[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "nerve-layer"
+version = "1.0.0"
+description = "Event schema and bus for Project Nerve LLM governance ecosystem"
+requires-python = ">=3.11"
+dependencies = [
+    "jsonschema>=4.21",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,41 @@
+# design.token.updated — payload schema
+# Emitido por: figma (via MCP) ou project-studio
+# Quando: design token é criado, modificado ou removido
+# Subscribers: agent-dev-harness, context-adapter
+
+type: object
+required:
+  - token_name
+  - project_slug
+  - changed_at
+  - change_type
+properties:
+  token_name:
+    type: string
+    description: Nome do token (ex: "color.primary.500").
+
+  project_slug:
+    type: string
+
+  changed_at:
+    type: string
+    format: date-time
+
+  change_type:
+    type: string
+    enum: [created, modified, deleted]
+
+  old_value:
+    type: string
+    description: OPTIONAL. Valor anterior (presente apenas em change_type=modified ou deleted).
+
+  new_value:
+    type: string
+    description: OPTIONAL. Novo valor (presente apenas em change_type=created ou modified).
+
+  token_type:
+    type: string
+    enum: [color, spacing, typography, shadow, border-radius, z-index, other]
+    description: OPTIONAL. Categoria do token.
+
+additionalProperties: false

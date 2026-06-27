@@ -1,0 +1,58 @@
+# harness.task.blocked — payload schema
+# Emitido por: agent-dev-harness
+# Quando: sessão não consegue completar a feature (ADR pendente, scope alert, erro irrecuperável)
+# Subscribers: project-studio (notifica Tech Lead)
+
+type: object
+required:
+  - feature_id
+  - project_slug
+  - domain
+  - blocked_at
+  - reason
+  - blocker_type
+properties:
+  feature_id:
+    type: string
+
+  project_slug:
+    type: string
+
+  domain:
+    type: string
+
+  blocked_at:
+    type: string
+    format: date-time
+
+  blocker_type:
+    type: string
+    enum:
+      - adr_pending        # ADR em draft bloqueia implementação
+      - scope_alert        # feature detectada como fora do escopo
+      - guardrail_violated # GUARDRAILS.md impediu a ação
+      - risk_zone          # zona de risco exige elevação
+      - verification_failed # testes falharam e não foi possível corrigir
+      - context_stale      # Brief desatualizado — full reload necessário
+      - unknown
+    description: Categoria do bloqueio — orienta a ação do Studio.
+
+  reason:
+    type: string
+    description: Descrição legível do motivo do bloqueio.
+
+  blocking_adr:
+    type: string
+    pattern: "^ADR-\\d{3}$"
+    description: OPTIONAL. ADR que causou o bloqueio (quando blocker_type=adr_pending).
+
+  session_id:
+    type: string
+    format: uuid
+    description: OPTIONAL.
+
+  next_action:
+    type: string
+    description: OPTIONAL. Sugestão de próximo passo para o humano resolver o bloqueio.
+
+additionalProperties: false

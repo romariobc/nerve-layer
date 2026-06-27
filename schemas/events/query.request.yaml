@@ -1,0 +1,52 @@
+# query.request — payload schema
+# Emitido por: project-studio
+# Quando: PM/Tech Lead solicita consulta ao estado atual de um sistema externo
+# Subscribers: nerve-layer (executor de queries MCP)
+# Padrão: Consultive Query (pull) — diferente dos eventos reativos (push)
+
+type: object
+required:
+  - query_id
+  - requester
+  - mcp_target
+  - query_payload
+  - timeout_ms
+  - callback_event
+properties:
+  query_id:
+    type: string
+    format: uuid
+    description: Correlaciona a query com o query.result correspondente.
+
+  requester:
+    type: string
+    enum: [project-studio, user]
+    description: Quem iniciou a consulta.
+
+  mcp_target:
+    type: string
+    enum: [linear, github, figma, slack, notion]
+    description: Sistema externo a ser consultado.
+
+  query_payload:
+    type: object
+    description: >
+      Query específica para o mcp_target.
+      Formato varia por target — validado pelo executor MCP, não por este schema.
+
+  timeout_ms:
+    type: integer
+    minimum: 1000
+    maximum: 30000
+    description: Timeout da query em milissegundos. Max 30s.
+
+  callback_event:
+    type: string
+    enum: [query.result]
+    description: Nome do evento de resposta. Sempre query.result.
+
+  project_slug:
+    type: string
+    description: OPTIONAL. Contexto do projeto para a query.
+
+additionalProperties: false

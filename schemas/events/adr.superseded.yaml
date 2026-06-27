@@ -1,0 +1,18 @@
+type: object
+required: [adr_id, project_slug, superseded_by, superseded_at]
+properties:
+  adr_id:
+    type: string
+    pattern: "^ADR-\\d{3}$"
+  project_slug:
+    type: string
+  superseded_by:
+    type: string
+    pattern: "^ADR-\\d{3}$"
+  superseded_at:
+    type: string
+    format: date-time
+  migration_note:
+    type: string
+    description: OPTIONAL. Orientação sobre o que muda na implementação.
+additionalProperties: false

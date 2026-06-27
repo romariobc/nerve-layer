@@ -1,0 +1,5 @@
+{
+  "_comment": "Dead Letter Queue — eventos pendentes de entrega. Gerenciado pelo event_bus.py. Não editar manualmente.",
+  "schema_version": "1.0.0",
+  "pending": []
+}

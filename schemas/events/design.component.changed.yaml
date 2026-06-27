@@ -1,0 +1,51 @@
+# design.component.changed — payload schema
+# Emitido por: figma (via MCP) ou project-studio
+# Quando: componente do Design System é modificado no Figma
+# Subscribers: agent-dev-harness, project-studio
+
+type: object
+required:
+  - component_id
+  - component_name
+  - project_slug
+  - changed_at
+  - change_type
+properties:
+  component_id:
+    type: string
+    description: ID do componente no Figma.
+
+  component_name:
+    type: string
+    description: Nome legível do componente (ex: "Button/Primary").
+
+  project_slug:
+    type: string
+
+  changed_at:
+    type: string
+    format: date-time
+
+  change_type:
+    type: string
+    enum: [created, modified, deleted, renamed]
+
+  affected_tokens:
+    type: array
+    items:
+      type: string
+    description: OPTIONAL. Design tokens afetados por esta mudança.
+
+  figma_url:
+    type: string
+    format: uri
+    description: OPTIONAL. Link direto para o componente no Figma.
+
+  breaking:
+    type: boolean
+    default: false
+    description: >
+      OPTIONAL. true se a mudança quebra implementações existentes
+      (ex: prop renomeada, variante removida).
+
+additionalProperties: false

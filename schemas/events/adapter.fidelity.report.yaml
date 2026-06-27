@@ -1,0 +1,106 @@
+# adapter.fidelity.report — payload schema
+# Emitido por: context-adapter
+# Quando: adapter termina de traduzir o Project Brief para uma plataforma
+# Subscribers: project-studio (apresenta relatório ao Tech Lead)
+
+type: object
+required:
+  - project_slug
+  - adapter_target
+  - brief_version
+  - generated_at
+  - preserved
+  - degraded
+  - lost
+properties:
+  project_slug:
+    type: string
+
+  adapter_target:
+    type: string
+    enum: [claude-code, cursor, copilot, ollama, windsurf, continue]
+    description: Plataforma para a qual o Brief foi traduzido.
+
+  brief_version:
+    type: string
+    pattern: "^\\d+\\.\\d+\\.\\d+$"
+
+  generated_at:
+    type: string
+    format: date-time
+
+  preserved:
+    type: array
+    items:
+      type: object
+      required: [concept, source_file, target_file]
+      properties:
+        concept:
+          type: string
+          description: Conceito traduzido com fidelidade total.
+        source_file:
+          type: string
+          description: Arquivo do Brief de origem (ex: "GUARDRAILS.md").
+        target_file:
+          type: string
+          description: Arquivo gerado (ex: ".claude/CLAUDE.md").
+    description: Conceitos traduzidos sem perda.
+
+  degraded:
+    type: array
+    items:
+      type: object
+      required: [concept, source_file, reason, fallback]
+      properties:
+        concept:
+          type: string
+        source_file:
+          type: string
+        reason:
+          type: string
+          description: Por que houve perda (ex: "Cursor não suporta hooks — convertido para Always rule").
+        fallback:
+          type: string
+          description: O que foi gerado no lugar.
+        severity:
+          type: string
+          enum: [low, medium, high]
+          description: Impacto da degradação. high = proibição crítica degradada.
+    description: Conceitos traduzidos com perda parcial — requerem revisão do Tech Lead.
+
+  lost:
+    type: array
+    items:
+      type: object
+      required: [concept, source_file, reason]
+      properties:
+        concept:
+          type: string
+        source_file:
+          type: string
+        reason:
+          type: string
+          description: Por que não há equivalente na plataforma.
+    description: >
+      Conceitos sem equivalente na plataforma.
+      Se não vazio, o adapter retorna erro e NÃO gera os arquivos de configuração.
+
+  platform_only:
+    type: array
+    items:
+      type: object
+      required: [feature, description]
+      properties:
+        feature:
+          type: string
+        description:
+          type: string
+    description: OPTIONAL. Features da plataforma sem origem no Brief (informativo).
+
+  output_files:
+    type: array
+    items:
+      type: string
+    description: OPTIONAL. Lista de arquivos gerados pelo adapter.
+
+additionalProperties: false

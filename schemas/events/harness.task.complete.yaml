@@ -1,0 +1,55 @@
+# harness.task.complete — payload schema
+# Emitido por: agent-dev-harness
+# Quando: feature verificada e persistida com sucesso (etapa 3 e 4 do ciclo)
+# Subscribers: project-studio
+
+type: object
+required:
+  - feature_id
+  - project_slug
+  - domain
+  - completed_at
+  - verification
+properties:
+  feature_id:
+    type: string
+    description: ID da feature em feature_list.json (ex: "FEAT-012").
+
+  project_slug:
+    type: string
+
+  domain:
+    type: string
+    description: Domínio ativo da sessão (ex: "agendamento").
+
+  completed_at:
+    type: string
+    format: date-time
+
+  verification:
+    type: object
+    required:
+      - computational_passed
+      - inferential_passed
+    properties:
+      computational_passed:
+        type: boolean
+        description: pytest + lint passaram.
+      inferential_passed:
+        type: boolean
+        description: LLM-as-judge aprovou.
+      test_summary:
+        type: string
+        description: OPTIONAL. Resumo dos testes executados.
+
+  session_id:
+    type: string
+    format: uuid
+    description: OPTIONAL. ID da sessão do Harness.
+
+  pr_url:
+    type: string
+    format: uri
+    description: OPTIONAL. URL do PR criado nesta sessão.
+
+additionalProperties: false
