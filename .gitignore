@@ -4,3 +4,4 @@
 *.egg-info/
 dist/
 build/
+bus/pending-events.json
