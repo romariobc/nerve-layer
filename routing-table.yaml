@@ -1,43 +1,21 @@
-# ================================================================
-# routing-table.yaml — Nerve Layer · Event Routing + Retry Policy
-# ================================================================
-# VERSION: 1.0.0
-#
-# Define para cada evento:
-#   - subscribers: quem recebe
-#   - requires_human: se o Studio deve apresentar antes de agir
-#   - priority: ordem de entrega na fila
-#   - retry_policy: tentativas em caso de falha de entrega
-#   - replay_on_connect: re-entrega ao subscriber que estava offline
-#   - ttl_hours: tempo máximo na DLQ antes de expirar
-#
-# Prioridade de leitura pelo bus:
-#   high → normal → low
-# ================================================================
-
-schema_version: "1.0.0"
-
+schema_version: 1.0.0
 events:
-
-  # ── Eventos de Brief ─────────────────────────────────────────
   brief.published:
     subscribers:
-      - agent-dev-harness
-      - context-adapter
-    requires_human: false
+    - agent-dev-harness
+    - context-adapter
+    requires_human: true
     priority: high
     retry_policy:
       max_attempts: 5
-      backoff: exponential      # 1s → 2s → 4s → 8s → 16s
+      backoff: exponential
       dead_letter_queue: true
-    replay_on_connect: true     # Harness offline recebe ao reconectar
-    ttl_hours: 72               # Expira na DLQ após 72h
-
-  # ── Eventos de ADR ───────────────────────────────────────────
+    replay_on_connect: true
+    ttl_hours: 72
   adr.approved:
     subscribers:
-      - agent-dev-harness
-      - context-adapter
+    - agent-dev-harness
+    - context-adapter
     requires_human: false
     priority: high
     retry_policy:
@@ -46,10 +24,9 @@ events:
       dead_letter_queue: true
     replay_on_connect: true
     ttl_hours: 72
-
   adr.superseded:
     subscribers:
-      - agent-dev-harness
+    - agent-dev-harness
     requires_human: false
     priority: high
     retry_policy:
@@ -58,37 +35,33 @@ events:
       dead_letter_queue: true
     replay_on_connect: true
     ttl_hours: 72
-
   adr.stale:
     subscribers:
-      - project-studio
-    requires_human: true        # Studio notifica o owner — ação humana requerida
-    priority: normal
-    retry_policy:
-      max_attempts: 3
-      backoff: linear           # 5s → 5s → 5s
-      dead_letter_queue: true
-    replay_on_connect: false    # Stale alert não faz replay — scheduler re-emite se ainda stale
-    ttl_hours: 24
-
-  # ── Eventos de Design ────────────────────────────────────────
-  design.component.changed:
-    subscribers:
-      - agent-dev-harness
-      - project-studio
-    requires_human: true        # Dev decide se para a sessão para atualizar
+    - project-studio
+    requires_human: true
     priority: normal
     retry_policy:
       max_attempts: 3
       backoff: linear
       dead_letter_queue: true
-    replay_on_connect: false    # Design changes não fazem replay — estado atual importa, não histórico
+    replay_on_connect: false
     ttl_hours: 24
-
+  design.component.changed:
+    subscribers:
+    - agent-dev-harness
+    - project-studio
+    requires_human: true
+    priority: normal
+    retry_policy:
+      max_attempts: 3
+      backoff: linear
+      dead_letter_queue: true
+    replay_on_connect: false
+    ttl_hours: 24
   design.token.updated:
     subscribers:
-      - agent-dev-harness
-      - context-adapter
+    - agent-dev-harness
+    - context-adapter
     requires_human: false
     priority: normal
     retry_policy:
@@ -97,11 +70,9 @@ events:
       dead_letter_queue: true
     replay_on_connect: false
     ttl_hours: 24
-
-  # ── Eventos do Harness ───────────────────────────────────────
   harness.task.complete:
     subscribers:
-      - project-studio
+    - project-studio
     requires_human: false
     priority: normal
     retry_policy:
@@ -110,11 +81,10 @@ events:
       dead_letter_queue: true
     replay_on_connect: true
     ttl_hours: 48
-
   harness.task.blocked:
     subscribers:
-      - project-studio
-    requires_human: true        # Tech Lead precisa resolver o bloqueio
+    - project-studio
+    requires_human: true
     priority: high
     retry_policy:
       max_attempts: 5
@@ -122,12 +92,10 @@ events:
       dead_letter_queue: true
     replay_on_connect: true
     ttl_hours: 72
-
-  # ── Feature Alert ─────────────────────────────────────────────
   feature.scope.alert:
     subscribers:
-      - project-studio
-    requires_human: true        # PM/Tech Lead decide se autoriza ou bloqueia
+    - project-studio
+    requires_human: true
     priority: high
     retry_policy:
       max_attempts: 5
@@ -135,11 +103,9 @@ events:
       dead_letter_queue: true
     replay_on_connect: true
     ttl_hours: 72
-
-  # ── Skills ───────────────────────────────────────────────────
   skill.updated:
     subscribers:
-      - agent-dev-harness
+    - agent-dev-harness
     requires_human: false
     priority: normal
     retry_policy:
@@ -148,12 +114,10 @@ events:
       dead_letter_queue: true
     replay_on_connect: true
     ttl_hours: 48
-
-  # ── Context Adapter ──────────────────────────────────────────
   adapter.fidelity.report:
     subscribers:
-      - project-studio
-    requires_human: true        # Tech Lead revisa degradações e perdas
+    - project-studio
+    requires_human: true
     priority: normal
     retry_policy:
       max_attempts: 3
@@ -161,28 +125,25 @@ events:
       dead_letter_queue: true
     replay_on_connect: true
     ttl_hours: 48
-
-  # ── Consultive Queries ───────────────────────────────────────
   query.request:
     subscribers:
-      - nerve-layer             # O Nerve executa a query MCP
+    - nerve-layer
     requires_human: false
     priority: normal
     retry_policy:
-      max_attempts: 1           # Queries não fazem retry — timeout é o mecanismo
+      max_attempts: 1
       backoff: none
       dead_letter_queue: false
     replay_on_connect: false
-    ttl_hours: 1               # Expira rápido — query stale não tem valor
-
+    ttl_hours: 1
   query.result:
     subscribers:
-      - project-studio
+    - project-studio
     requires_human: false
     priority: normal
     retry_policy:
       max_attempts: 3
       backoff: linear
-      dead_letter_queue: false  # Se result não chega, Studio lida via timeout do query.request
+      dead_letter_queue: false
     replay_on_connect: false
     ttl_hours: 1
