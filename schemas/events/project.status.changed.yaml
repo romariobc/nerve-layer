@@ -1,0 +1,45 @@
+# project.status.changed — payload schema
+# Emitido por: linear (via MCP)
+# Quando: status de um projeto/issue muda no Linear
+# Subscribers: project-studio, agent-dev-harness
+
+type: object
+required:
+  - project_id
+  - project_name
+  - issue_count
+  - status
+properties:
+  project_id:
+    type: string
+    description: ID do projeto no Linear.
+
+  project_name:
+    type: string
+    description: Nome legível do projeto.
+
+  issue_count:
+    type: integer
+    minimum: 0
+    description: Número total de issues no projeto.
+
+  status:
+    type: string
+    enum: [backlog, todo, in_progress, in_review, done]
+    description: Estado agregado do projeto.
+
+  updated_at:
+    type: string
+    format: date-time
+    description: OPTIONAL. Timestamp da última mudança.
+
+  team_id:
+    type: string
+    description: OPTIONAL. ID do time no Linear que possui este projeto.
+
+  url:
+    type: string
+    format: uri
+    description: OPTIONAL. Link direto para o projeto no Linear.
+
+additionalProperties: false
