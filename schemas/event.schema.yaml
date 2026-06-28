@@ -36,6 +36,7 @@ properties:
       - adapter.fidelity.report
       - query.request
       - query.result
+      - project.status.changed
 
   source:
     type: string
