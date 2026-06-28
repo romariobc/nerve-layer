@@ -1,0 +1,51 @@
+# code.pushed — payload schema
+# Emitido por: github (via MCP)
+# Quando: commits são feitos push para um repositório
+# Subscribers: project-studio, agent-dev-harness, context-adapter
+
+type: object
+required:
+  - repository_name
+  - branch
+  - pushed_at
+  - commit_count
+properties:
+  repository_name:
+    type: string
+    description: Nome completo do repositório.
+
+  branch:
+    type: string
+    description: Nome da branch para a qual foi feito push.
+
+  pushed_at:
+    type: string
+    format: date-time
+    description: Timestamp do push.
+
+  commit_count:
+    type: integer
+    minimum: 1
+    description: Número de commits no push.
+
+  pushed_by:
+    type: string
+    description: OPTIONAL. Login do usuário que fez push.
+
+  commits:
+    type: array
+    items:
+      type: string
+    description: OPTIONAL. Lista de hashes de commit (SHA).
+
+  url:
+    type: string
+    format: uri
+    description: OPTIONAL. Link direto para a branch no GitHub.
+
+  is_default_branch:
+    type: boolean
+    default: false
+    description: OPTIONAL. true se é a branch padrão (main/master).
+
+additionalProperties: false
