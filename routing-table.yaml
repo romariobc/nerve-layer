@@ -148,16 +148,8 @@ events:
     replay_on_connect: false
     ttl_hours: 1
 
-  # ── Linear Connector ─────────────────────────────────────────
+# ── Linear Connector ─────────────────────────────────────────
   project.status.changed:
-    subscribers:
-      - project-studio
-      - agent-dev-harness
-    requires_human: false
-    priority: normal
-    retry_policy:
-      max_attempts: 3
-      backoff: linear
-      dead_letter_queue: true
-    replay_on_connect: false
-    ttl_hours: 24
+
+# ── GitHub Connector ─────────────────────────────────────────
+  pr.merged:

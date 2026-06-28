@@ -1,0 +1,57 @@
+# pr.merged — payload schema
+# Emitido por: github (via MCP)
+# Quando: pull request é merged em um repositório
+# Subscribers: project-studio, agent-dev-harness
+
+type: object
+required:
+  - pull_request_id
+  - pull_request_number
+  - repository_name
+  - merged_at
+  - merged_by
+properties:
+  pull_request_id:
+    type: string
+    description: ID único do PR no GitHub.
+
+  pull_request_number:
+    type: integer
+    description: Número do PR no repositório (ex: #123).
+
+  repository_name:
+    type: string
+    description: Nome completo do repositório (ex: "romariobc/nerve-layer").
+
+  merged_at:
+    type: string
+    format: date-time
+    description: Timestamp quando o PR foi merged.
+
+  merged_by:
+    type: string
+    description: Login do usuário que fez merge.
+
+  branch:
+    type: string
+    description: OPTIONAL. Nome da branch do PR.
+
+  target_branch:
+    type: string
+    description: OPTIONAL. Branch para a qual o PR foi merged (ex: "main").
+
+  title:
+    type: string
+    description: OPTIONAL. Título do PR.
+
+  commit_count:
+    type: integer
+    minimum: 1
+    description: OPTIONAL. Número de commits inclusos.
+
+  url:
+    type: string
+    format: uri
+    description: OPTIONAL. Link direto para o PR no GitHub.
+
+additionalProperties: false
